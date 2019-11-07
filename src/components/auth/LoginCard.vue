@@ -78,8 +78,9 @@ export default {
         .catch(({ status }) => {
           if (status === ERROR_CODES.CREDENTIALS)
             this.$notify.error("Invalid username or password.");
-          if (status === ERROR_CODES.FORBIDDEN)
+          else if (status === ERROR_CODES.FORBIDDEN)
             this.$notify.error("Account is inactive. Please contact the administrator.");
+          else this.$notify.error("Unknown error.");
           this.loading = false;
         });
     },
