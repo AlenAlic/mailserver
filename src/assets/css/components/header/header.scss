@@ -1,0 +1,58 @@
+.header
+{
+    position: sticky;
+    min-height: $header-height;
+    padding: $indent-3 $indent-6 $indent-2;
+    background: $color-default;
+    line-height: $line-height-default;
+    text-align: center;
+    z-index: 100;
+    top: 0;
+
+    @include drop-shadow-color(0, 1px, 3px, 0, $color-grey-dark);
+
+    .header__logo
+    {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: $indent-6;
+        display: block;
+        max-height: $indent-4;
+        width: auto;
+        margin: auto;
+    }
+
+    .header__logout
+    {
+        position: absolute;
+        right: $indent-base/2;
+        top: -$indent-3;
+        display: block;
+        line-height: $line-height-default;
+        padding: $indent-7 / 2 $indent-3 $indent-7 / 2;
+        background: $color-theme;
+        color: $color-default;
+        border: none;
+        font-size: $font-size-s;
+        text-transform: uppercase;
+        text-decoration: none;
+        height: $header-height;
+
+        @include transition();
+
+        &:hover,
+        &:active
+        {
+            background: $color-theme-dark;
+            color: $color-default;
+            cursor: pointer;
+        }
+    }
+
+    @media (max-width: $screen-sm)
+    {
+        padding: $indent-3 $indent-1 $indent-2;
+        text-align: left;
+    }
+}

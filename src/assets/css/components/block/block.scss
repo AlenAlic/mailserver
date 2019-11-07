@@ -1,0 +1,21 @@
+.block
+{
+    display: block;
+    margin: $indent-3 0 0;
+    padding: $indent-4 $indent-5 $indent-7;
+    background: $color-default;
+    text-align: left;
+
+    .form
+    {
+        .button
+        {
+            margin: 0 $indent-2 $indent-1;
+        }
+    }
+
+    @media (max-width: $screen-xs)
+    {
+        padding: $indent-2 $indent-2;
+    }
+}

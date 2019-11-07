@@ -1,0 +1,53 @@
+.button
+{
+    position: relative;
+    display: inline-block;
+    line-height: $line-height-xs;
+    padding: $indent-2 $indent-3;
+    color: $color-default;
+    font-weight: $font-weight-regular;
+    font-size: $font-size-default;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    border-radius: $border-radius;
+    top: 0;
+    overflow: hidden;
+    vertical-align: top;
+    background: $color-theme;
+
+    @include no-appearance();
+    @include transition();
+
+    &:hover,
+    &:focus,
+    &:active
+    {
+        background: $color-theme-dark;
+        text-decoration: none;
+        cursor: pointer;
+        color: $color-default;
+    }
+
+    &:disabled,
+    &[disabled="disabled"],
+    &.is-disabled
+    {
+        background: $color-disabled;
+        color: $color-default;
+
+        &:hover,
+        &:focus,
+        &:active
+        {
+            background: $color-disabled;
+            top: 0;
+            cursor: not-allowed;
+        }
+    }
+
+    .spinner_border--tiny {
+        margin-right: $indent-1;
+    }
+}

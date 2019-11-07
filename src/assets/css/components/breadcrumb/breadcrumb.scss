@@ -1,0 +1,32 @@
+.breadcrumb
+{
+    display: block;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    li
+    {
+        list-style: none;
+        float: left;
+
+        .breadcrumb__icon
+        {
+            display: inline-block;
+            margin: 0 $indent-1;
+            font-size: $font-size-s;
+        }
+
+        a
+        {
+            color: $color-text;
+
+            &:hover,
+            &:active
+            {
+                color: $color-theme;
+                text-decoration: none;
+            }
+        }
+    }
+}

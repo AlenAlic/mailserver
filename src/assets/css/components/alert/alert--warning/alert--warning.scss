@@ -1,0 +1,6 @@
+.alert--warning
+{
+    @extend .alert;
+
+    background: $color-warning;
+}

@@ -1,0 +1,158 @@
+$form-item-height: $input-height;
+
+.form
+{
+    position: relative;
+
+    .radio,
+    .checkbox
+    {
+        margin: $indent-1 0;
+
+        &.is-inline
+        {
+            display: inline-block;
+            margin: $indent-1 $indent-4 0 0;
+        }
+    }
+
+    .button
+    {
+        margin: 0 $indent-3 $indent-3 0;
+    }
+}
+
+.form__group
+{
+    margin: 0 0 $indent-4;
+    text-align: left;
+}
+
+.form__group--full_width
+{
+    @extend .form__group;
+
+    .form__input--text,
+    .form__input--textarea
+    {
+        width: 100%;
+    }
+}
+
+.form__label,
+legend
+{
+    display: block;
+    line-height: $line-height-default;
+    margin: 0 0 $indent-1;
+    font-size: $font-size-default;
+    font-weight: $font-weight-regular;
+}
+
+.form__input--text
+{
+    width: 100%;
+    max-width: 100%;
+    height: $form-item-height;
+    padding: 0 $indent-2;
+    border: 1px solid $color-border;
+    border-radius: $border-radius;
+    font-size: $font-size-s;
+    font-weight: $font-weight-light;
+    line-height: $line-height-xs;
+    color: $color-text;
+    background: $color-default;
+    vertical-align: top;
+
+    @include no-shadow;
+    @include transition();
+
+    &:focus
+    {
+        border-color: $color-border-dark;
+    }
+
+    &:disabled,
+    &.is-disabled
+    {
+        color: $color-grey-light;
+        border-color: $color-grey-light;
+        cursor: not-allowed;
+
+        &:focus
+        {
+            border-color: $color-grey-light;
+        }
+    }
+
+    &.has-error
+    {
+        border-color: $color-alert;
+        color: $color-alert;
+    }
+}
+
+.form__input--textarea
+{
+    @extend .form__input--text;
+
+    height: 6.5rem;
+    padding: $indent-2;
+    resize: vertical;
+}
+
+.form__small_link
+{
+    font-size: $font-size-s;
+    color: $color-grey;
+
+    &:hover,
+    &:active
+    {
+        color: $color-theme;
+    }
+}
+
+.form__buttons--top
+{
+    float: right;
+
+    .button,
+    .button--alt,
+    .button--alt--inv,
+    .button--cta
+    {
+        margin: 0 0 $indent-3 $indent-3;
+    }
+}
+
+.form__buttons
+{
+    margin: $indent-6 0 0;
+}
+
+.form__error_text
+{
+    position: relative;
+    display: block;
+    margin: $indent-xs 0 0;
+    color: $color-alert;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-regular;
+}
+
+@media (max-width: $screen-sm)
+{
+    .form__buttons--top
+    {
+        float: none;
+
+        .button,
+        .button--alt,
+        .button--alt--inv,
+        .button--cta
+        {
+            margin: 0 $indent-3 $indent-3 0;
+        }
+    }
+}

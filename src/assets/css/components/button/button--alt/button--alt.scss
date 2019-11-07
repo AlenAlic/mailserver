@@ -1,0 +1,19 @@
+.button--alt
+{
+    @extend .button;
+
+    background: $color-grey-light;
+    color: $color-grey-dark;
+
+    &:hover,
+    &:focus
+    {
+        background: $color-grey-40-o;
+        color: $color-grey-dark;
+    }
+
+    &:active
+    {
+        background: $color-grey;
+    }
+}

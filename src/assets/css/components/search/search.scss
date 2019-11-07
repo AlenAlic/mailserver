@@ -1,0 +1,45 @@
+.search
+{
+    position: relative;
+    white-space: nowrap;
+
+    @include flexbox();
+
+    .search__input
+    {
+        @extend .form__input--text;
+
+        border-right: none;
+        border-radius: $border-radius 0 0 $border-radius;
+        padding-left: $input-height;
+        font-size: $font-size-s;
+
+        @include flex(1 0 $indent-10);
+    }
+
+    .search__button
+    {
+        height: $input-height;
+        line-height: $input-height;
+        margin-left: -$indent-xs;
+        padding: 0 $indent-3;
+        border-radius: 0 $border-radius $border-radius 0;
+
+        @include flex(0 0 auto);
+    }
+
+    &:before
+    {
+        content: "\f349";
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        width: $input-height;
+        height: $input-height;
+        line-height: 40px; //Necessary for IE :(
+        font-family: $font-icon;
+        font-size: 1.8rem;
+        text-align: center;
+    }
+}

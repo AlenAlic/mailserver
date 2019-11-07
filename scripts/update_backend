@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo "Creating database backup===="
+source scripts/backup
+echo "========================Done"
+
+echo "Stopping Gunicorn supervisor"
+sudo supervisorctl stop mailserver
+echo "========================Done"
+
+echo "Checking out new version===="
+git pull
+echo "========================Done"
+
+echo "Installing requirements====="
+source venv/bin/activate
+pip install -r requirements.txt
+echo "========================Done"
+
+echo "Migrating Database=========="
+export FLASK_APP=run.py
+flask db upgrade
+deactivate
+echo "========================Done"
+
+echo "Restarting Services========="
+sudo supervisorctl start mailserver
+sudo systemctl reload nginx
+echo "========================Done"

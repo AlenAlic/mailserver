@@ -1,0 +1,105 @@
+.modal
+{
+    background: $color-grey-80-o;
+    overflow-y: auto;
+
+    .v--modal-box
+    {
+        //Importants are necessary to override component inline styling added with JS
+        position: relative;
+        width: 90% !important;
+        height: auto !important;
+        max-width: 95rem;
+        margin: $indent-10 * 3 auto;
+        padding: $indent-5 $indent-7;
+        top: 0 !important;
+        left: 0 !important;
+        text-align: center;
+    }
+
+    h3, h4
+    {
+        margin: 0 0 $indent-1;
+        white-space: normal;
+    }
+
+    .modal__close
+    {
+        position: absolute;
+        top: $indent-3;
+        right: $indent-3;
+        font-size: $font-size-icon-l;
+        line-height: $font-size-icon-l;
+        color: $color-text;
+        z-index: 1;
+
+        &:hover,
+        &:active
+        {
+            color: $color-cta;
+        }
+    }
+
+    .modal__content
+    {
+        margin: $indent-6 0 0;
+        line-height: $line-height-s;
+        text-align: left;
+        font-size: $font-size-s;
+    }
+
+    .modal__footer
+    {
+        margin: $indent-7 0 0;
+
+        .button
+        {
+            margin: 0 $indent-1 $indent-1;
+        }
+    }
+
+    .modal__image
+    {
+        display: block;
+        margin: 0 auto;
+    }
+
+    hr
+    {
+        margin: $indent-4 0;
+        border: none;
+        border-top: 1px solid $color-border;
+    }
+
+    @media (max-width: $screen-sm)
+    {
+        .v--modal-box
+        {
+            margin: $indent-10 auto;
+            padding: $indent-4;
+        }
+
+        .modal__close
+        {
+            top: $indent-2;
+            right: $indent-2;
+        }
+    }
+
+    @media (max-width: $screen-xs)
+    {
+        .v--modal-box
+        {
+            margin: $indent-2 auto;
+            padding: $indent-3;
+        }
+    }
+}
+
+.modal__open
+{
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}

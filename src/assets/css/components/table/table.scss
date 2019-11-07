@@ -1,0 +1,173 @@
+.table__responsive
+{
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.table
+{
+    width: 100%;
+    min-width: $screen-sm;
+    border-collapse: collapse;
+    border-bottom: 1px solid $color-border;
+
+    th,
+    td
+    {
+        padding: $indent-3 / 2 0 $indent-3 / 2 $indent-3;
+        text-align: left;
+        vertical-align: top;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        &.table__wrap
+        {
+            white-space: normal;
+        }
+
+        &:last-child
+        {
+            padding-right: $indent-3;
+            text-align: right;
+        }
+    }
+
+    th
+    {
+        padding: $indent-2 0 $indent-2 $indent-3;
+        background: $color-theme;
+        color: $color-default;
+        font-weight: $font-weight-regular;
+    }
+
+    td
+    {
+        background: $color-default;
+        border-top: 1px solid $color-border;
+
+        @include transition();
+    }
+
+    tbody
+    {
+        &:first-child
+        {
+            tr
+            {
+                &:first-child
+                {
+                    td
+                    {
+                        border: none;
+                    }
+                }
+            }
+        }
+    }
+
+    tr
+    {
+        &.selected
+        {
+            td
+            {
+                background: $color-grey-light;
+            }
+        }
+
+        &:hover
+        {
+            td
+            {
+                background: $color-grey-light;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .table__icon
+    {
+        font-size: $font-size-icon;
+        color: $color-text;
+
+        @include transition();
+
+        &:hover
+        {
+            cursor: pointer;
+        }
+    }
+
+    .table__sort
+    {
+        &:after
+        {
+            position: absolute;
+            content: "\F045";
+            margin: 0 0 0 $indent-1;
+            font-family: $font-icon;
+            color: inherit;
+            font-size: 1.8rem;
+            font-weight: $font-weight-light;
+
+            @include transition(0.1s);
+            @include transform-origin(center, center);
+        }
+
+        &:hover,
+        &:active
+        {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        &.active
+        {
+            &:after
+            {
+                @include rotate(180deg);
+            }
+        }
+    }
+
+    .table__cell--id
+    {
+        width: $indent-8;
+    }
+
+    .table__cell--icon
+    {
+        width: $indent-6;
+    }
+
+    .table__cell--date
+    {
+        width: 12rem;
+    }
+
+    .table__cell--spinner
+    {
+        text-align: center;
+        background: $color-default;
+
+        &:last-child
+        {
+            text-align: center;
+        }
+
+        &:hover,
+        &:active
+        {
+            background: $color-default;
+            cursor: default;
+        }
+    }
+
+    .table__row--sub
+    {
+        td
+        {
+            border: none;
+        }
+    }
+}

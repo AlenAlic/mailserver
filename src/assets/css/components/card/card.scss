@@ -1,0 +1,84 @@
+@import "../../general/settings";
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; // See https://github.com/twbs/bootstrap/pull/22740#issuecomment-305868106
+    word-wrap: break-word;
+    background-color: $color-default;
+    background-clip: border-box;
+    @include drop-shadow-color(0, 1px, 3px, 0, $color-grey-dark);
+    //border: $border-width solid $color-border;
+    //-webkit-border-radius: $border-radius;
+    //-moz-border-radius: $border-radius;
+    //border-radius: $border-radius;
+}
+
+.card-body {
+    // Enable `flex-grow: 1` for decks and groups so that card blocks take up
+    // as much space as possible, ensuring footers are aligned to the bottom.
+    flex: 1 1 auto;
+    // Workaround for the image size bug in IE
+    // See: https://github.com/twbs/bootstrap/pull/28855
+    min-height: 1px;
+    padding: $indent-base;
+}
+
+.card-title {
+    margin-bottom: $indent-1;
+}
+
+.card-subtitle {
+    margin-top: -$indent-xs;
+    margin-bottom: 0;
+}
+
+.card-text:last-child {
+    margin-bottom: 0;
+}
+
+.card-link {
+    &:hover {
+        text-decoration: none;
+    }
+
+    + .card-link {
+        margin-left: $indent-2;
+    }
+}
+
+//
+// Optional textual caps
+//
+
+.card-header {
+  padding: $indent-1 $indent-2;
+  margin-bottom: 0; // Removes the default margin-bottom of <hN>
+  background-color: $color-grey-light;
+  border-bottom: $border-width solid $color-border;
+
+  &:first-child {
+      -webkit-border-radius: $border-radius $border-radius 0 0;
+      -moz-border-radius: $border-radius $border-radius 0 0;
+      border-radius: $border-radius $border-radius 0 0;
+  }
+
+  + .list-group {
+    .list-group-item:first-child {
+      border-top: 0;
+    }
+  }
+}
+
+.card-footer {
+  padding: $indent-1 $indent-2;
+  background-color: $color-grey-light;
+  border-top: $border-width solid $color-border;
+
+  &:last-child {
+      -webkit-border-radius: 0 0 $border-radius $border-radius;
+      -moz-border-radius: 0 0 $border-radius $border-radius;
+      border-radius: 0 0 $border-radius $border-radius;
+  }
+}

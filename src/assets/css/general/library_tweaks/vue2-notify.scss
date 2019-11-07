@@ -1,0 +1,62 @@
+// Move top notifications down below the header
+.notify {
+
+    z-index: 1001 !important;
+
+    .notify-item {
+        max-width: $screen-md;
+        margin: auto;
+    }
+
+    &.notify-top-full {
+        top: $header-height + $indent-2 !important;
+    }
+}
+
+// Notification icon and close button styling
+.notification {
+
+    .alert_icon {
+        margin-right: $indent-xs;
+    }
+
+    .close {
+        float: right;
+        font-size: $font-size-l;
+        font-weight: $font-weight-bold;
+        line-height: $line-height-default;
+        color: $color-default;
+        opacity: .75;
+        padding: $indent-1;
+        margin-left: $indent-2;
+    }
+
+    .close:not(:disabled):not(.disabled):focus, .close:not(:disabled):not(.disabled):hover {
+        opacity: 1;
+    }
+
+    button.close {
+        padding: 0;
+        background-color: transparent;
+        border: 0;
+        appearance: none;
+    }
+
+    .close:hover {
+        color: $color-grey-90-o;
+        text-decoration: none;
+    }
+
+    [type=button]:not(:disabled), button:not(:disabled) {
+        cursor: pointer;
+    }
+
+    button {
+        text-transform: none;
+        margin: 0;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        border-radius: 0;
+    }
+}

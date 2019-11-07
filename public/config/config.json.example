@@ -1,0 +1,9 @@
+{
+    "cookies": {
+        "enabled": true,
+        "type": "banner"
+    },
+    "api": {
+        "url": ""
+    }
+}

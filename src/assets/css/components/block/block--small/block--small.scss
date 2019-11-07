@@ -1,0 +1,13 @@
+.block--small
+{
+    @extend .block;
+
+    max-width: 56rem;
+    margin: 10rem auto 0;
+    text-align: center;
+
+    @media (max-width: $screen-xs)
+    {
+        margin-top: $indent-2;
+    }
+}

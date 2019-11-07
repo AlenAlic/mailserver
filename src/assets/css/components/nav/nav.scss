@@ -1,0 +1,127 @@
+.nav
+{
+    ul
+    {
+        display: block;
+        margin: 0;
+        padding: 0;
+        white-space: nowrap;
+
+        .nav__item
+        {
+            position: relative;
+            display: inline-block;
+            list-style: none;
+            margin: 0 $indent-3;
+            vertical-align: middle;
+        }
+
+        .nav__item--dropdown
+        {
+            @extend .nav__item;
+        }
+
+        .nav__item--mobile
+        {
+            @extend .nav__item;
+
+            display: none;
+        }
+
+        .nav__link
+        {
+            display: block;
+            padding-bottom: $indent-1;
+            line-height: $line-height-default;
+            margin: $indent-xs 0 0;
+            color: $color-theme-dark;
+            border-bottom: $indent-xs solid transparent;
+            text-decoration: none;
+
+            @include transition(0.1s);
+
+            &:hover,
+            &:active
+            {
+                color: $color-theme-dark;
+                text-decoration: none;
+                border-bottom-color: $color-theme-dark;
+            }
+
+            &.is-active
+            {
+                color: $color-theme-dark;
+                border-bottom-color: $color-theme-dark;
+                font-weight: $font-weight-bold;
+            }
+        }
+    }
+}
+
+.nav__toggle_mobile
+{
+    position: relative;
+    display: none;
+    float: right;
+    padding: $indent-xs 0 0;
+    font-size: $font-size-default;
+    border-radius: 0;
+    border: none;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: $color-theme-dark;
+
+    @include no-appearance();
+
+    .nav__toggle_mobile__icon
+    {
+        position: relative;
+        display: inline-block;
+        float: right;
+        width: $indent-4;
+        height: $line-height-m;
+        margin: 0 0 0 $indent-1;
+        font-size: $font-size-icon;
+
+        @include transition();
+
+        .mdi
+        {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    }
+
+    .counter
+    {
+        position: absolute;
+        top: -$indent-1;
+        left: -$indent-2;
+    }
+
+    &:hover,
+    &:active,
+    &:focus
+    {
+        color: $color-theme-dark;
+        text-decoration: none;
+        cursor: pointer;
+
+        .nav__toggle_mobile__icon
+        {
+            color: $color-theme-dark;
+        }
+    }
+
+    @media (max-width: $screen-sm)
+    {
+        display: inline-block;
+    }
+}
+
+.nav__mobile_open
+{
+    position: fixed;
+    width: 100%;
+}

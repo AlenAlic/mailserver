@@ -1,0 +1,46 @@
+# Environments
+DEVELOPMENT_ENV = 'development'
+DEBUG_ENV = 'debug'
+TESTING_ENV = 'testing'
+PRODUCTION_ENV = 'production'
+TESTING_ENVIRONMENTS = [DEVELOPMENT_ENV, TESTING_ENV, DEBUG_ENV]
+
+
+# Requests
+GET = "GET"
+POST = "POST"
+PATCH = "PATCH"
+PUT = "PUT"
+DELETE = "DELETE"
+
+
+# Responses
+OK = "", 200
+NO_CONTENT = "", 204
+BAD_REQUEST = "", 400
+UNAUTHORIZED = "", 401
+FORBIDDEN = "", 403
+NOT_FOUND = "", 404
+PAYLOAD_TOO_LARGE = "", 413
+SERVER_ERROR = "", 500
+SERVER_OFFLINE = "", 503
+SERVER_TIMEOUT = "", 504
+
+
+# Second conversions
+SECONDS_QUARTER = 900
+SECONDS_DAY = 86400
+SECONDS_MONTH = 2592000
+SECONDS_YEAR = 31536000
+
+
+# Security
+MINIMAL_PASSWORD_LENGTH = 12
+
+
+# Access levels
+AL_ADMIN = 0
+
+
+# Date related
+DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S"

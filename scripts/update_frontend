@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "Creating database backup===="
+source scripts/backup
+echo "========================Done"
+
+echo "Checking out new version===="
+git pull
+echo "========================Done"
+
+echo "Building frontend==========="
+npm install
+npm run build
+echo "========================Done"
+
+echo "Restarting Services========="
+sudo systemctl reload nginx
+echo "========================Done"
+

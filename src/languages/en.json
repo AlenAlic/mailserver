@@ -1,0 +1,42 @@
+{
+  "menu": {
+    "home": "Home",
+    "styleguide": "Styleguide",
+    "auth": "Authentication",
+    "signout": "Log out",
+    "guidelines": "Guidelines",
+    "dashboard": "Dashboard"
+  },
+  "page_not_found": "Sorry, this page does not exist...",
+  "navigation": {
+    "go_back": "Go back"
+  },
+  "auth": {
+    "header_signin": "Log in with username and password",
+    "header_forgotten_password": "Forgot your password?",
+    "header_reset_password": "Change your password",
+    "message_forgotten_password": "Enter your e-mail address below and we will send you an e-mail to reset your password.",
+    "hint_email": "E-mail address",
+    "hint_password": "Password",
+    "button_signin": "Log in",
+    "button_reset_password": "Reset password",
+    "button_cancel": "Cancel",
+    "button_change_password": "Change password",
+    "link_no_account": "Don't have an account?",
+    "link_forgot_password": "Forgot your password?"
+  },
+  "footer": {
+    "copyrights": "All rights reserved"
+  },
+  "network-errors": {
+    "unknown": "Something went wrong while executing your request, please try again later.",
+    "credentials": "You are not authorized to perform this action.",
+    "forbidden": "You are not allowed to perform this action.",
+    "not-found": "The server was unable to find the information you requested.",
+    "server-offline": "The server is offline, the system is temporarily unavailable.",
+    "server-timeout": "The server took too long to respond, please try again. If this keeps happening, please contact the administrator",
+    "server-cors": "There seems to have been a CORS issue with the server. If this keeps happening, please contact the administrator",
+    "bad-request": "Incomplete request sent, please check it and try again.",
+    "payload-too-large": "The file is too large to be uploaded."
+  }
+}

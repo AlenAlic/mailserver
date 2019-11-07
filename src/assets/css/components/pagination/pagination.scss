@@ -1,0 +1,53 @@
+$pagination-height: 5 * $multiplier;
+
+.pagination
+{
+    display: block;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    li
+    {
+        list-style: none;
+        float: left;
+        margin-right: 0.2rem;
+
+        a
+        {
+            display: block;
+            padding: 0 $indent-1;
+            height: $pagination-height;
+            line-height: $pagination-height;
+            min-width: $pagination-height;
+            text-align: center;
+            text-decoration: none;
+            color: $color-default;
+            font-weight: $font-weight-semibold;
+            background: $color-grey;
+            border-radius: $border-radius;
+
+            @include transition();
+
+            &:hover,
+            &:active
+            {
+                background: $color-grey-dark;
+            }
+        }
+
+        &.active
+        {
+            a
+            {
+                background: $color-theme;
+
+                &:hover,
+                &:active
+                {
+                    background: $color-theme;
+                }
+            }
+        }
+    }
+}

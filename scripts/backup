@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+mysqldump --login-path=galacursussen galacursussen | xz -z > "backups/backup-galacursussen-$(date +%Y%m%d-%H%M%S).db.xz"

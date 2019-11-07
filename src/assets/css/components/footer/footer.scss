@@ -1,0 +1,29 @@
+.footer
+{
+    padding: $indent-4 $indent-6;
+    line-height: $indent-4;
+    background: $color-grey-dark;
+    color: $color-default;
+
+    .footer__logo
+    {
+        float: right;
+    }
+
+    @media (max-width: $screen-md)
+    {
+        padding: $indent-4;
+    }
+
+    @media (max-width: $screen-sm)
+    {
+        padding: $indent-3 $indent-2;
+
+        .footer__logo
+        {
+            display: block;
+            float: none;
+            margin: 0 0 $indent-2;
+        }
+    }
+}

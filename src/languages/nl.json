@@ -1,0 +1,42 @@
+{
+  "menu": {
+    "home": "Thuis",
+    "styleguide": "Ontwerp richtlijnen",
+    "auth": "Authenticatie",
+    "signout": "Log uit",
+    "guidelines": "Richtlijnen",
+    "dashboard": "Dashboard"
+  },
+  "page_not_found": "Sorry, deze pagina bestaat niet...",
+  "navigation": {
+    "go_back": "Ga terug"
+  },
+  "auth": {
+    "header_signin": "Log in met je e-mail en wachtwoord",
+    "header_forgotten_password": "Wachtwoord vergeten?",
+    "header_reset_password": "Verander je wachtwoord",
+    "message_forgotten_password": "Voer je e-mail adres in en wij sturen je een e-mail om je wachtwoord te resetten.",
+    "hint_email": "E-mail adres",
+    "hint_password": "Wachtwoord",
+    "button_signin": "Log in",
+    "button_reset_password": "Reset wachtwoord",
+    "button_cancel": "Cancel",
+    "button_change_password": "Verander wachtwoord",
+    "link_no_account": "Geen account?",
+    "link_forgot_password": "Wachtwoord vergeten?"
+  },
+  "footer": {
+    "copyrights": "All rights reserved"
+  },
+  "network-errors": {
+    "unknown": "Er ging iets mis bij het uitvoeren van uw verzoek, probeer het later nogmaals.",
+    "credentials": "U heeft niet de bevoegdheid om deze actie te voltooien.",
+    "forbidden": "U heeft geen toegang tot deze gegevens",
+    "not-found": "De server kon de gevraagde informatie niet vinden.",
+    "server-offline": "De server is offline, het systeem kan tijdelijk niet gebruikt worden.",
+    "server-timeout": "De server deed te lang over het antwoord, probeer het opnieuw. Als dit blijft gebeuren neem contact op met de administrator.",
+    "server-cors": "Er lijkt een CORS fout te hebben plaatsgevonden met de server. Als dit blijft gebeuren neem contact op met de administrator",
+    "bad-request": "Uw aanvraag is niet compleet, controleer uw aanvraag en probeer het opnieuw.",
+    "payload-too-large": "Het bestand is te groot om te uploaden."
+  }
+}

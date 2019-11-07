@@ -1,0 +1,25 @@
+.modal--small
+{
+    @extend .modal;
+
+    .v--modal-box
+    {
+        max-width: 40rem;
+        margin: $indent-10 * 2 auto;
+        padding: $indent-4;
+    }
+
+    .modal__close
+    {
+        top: $indent-2;
+        right: $indent-2;
+    }
+
+    @media (max-width: $screen-xs)
+    {
+        .v--modal-box
+        {
+            margin: $indent-2 auto;
+        }
+    }
+}

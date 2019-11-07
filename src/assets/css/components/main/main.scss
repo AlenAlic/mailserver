@@ -1,0 +1,18 @@
+.main
+{
+    display: block;
+    padding: $indent-2 $indent-1 10rem;
+    background: $color-default;
+
+    @include flex(1 0 auto);
+
+    @media (max-width: $screen-sm)
+    {
+        padding-bottom: $indent-5;
+    }
+
+    @media (max-width: $screen-xs)
+    {
+        padding-bottom: $indent-2;
+    }
+}

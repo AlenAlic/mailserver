@@ -1,0 +1,6 @@
+.alert--success
+{
+    @extend .alert;
+
+    background: $color-success;
+}

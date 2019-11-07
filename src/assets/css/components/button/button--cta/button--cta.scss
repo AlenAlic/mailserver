@@ -1,0 +1,13 @@
+.button--cta
+{
+    @extend .button;
+
+    background: $color-cta;
+
+    &:hover,
+    &:focus,
+    &:active
+    {
+        background: darken($color-cta, 5%)
+    }
+}
