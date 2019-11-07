@@ -37,7 +37,6 @@ Vue.config.productionTip = false;
 async function main() {
   try {
     const config = await frontendApi.fetchConfig().catch(err => {
-      console.error("Failed to fetch config file");
       throw err;
     });
 
@@ -62,7 +61,6 @@ async function main() {
       render: h => h(App)
     }).$mount("#app");
   } catch (error) {
-    console.error(error);
     new Vue({
       el: "#app",
       render: h => h(AppNotLoaded)
