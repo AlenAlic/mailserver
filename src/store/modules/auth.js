@@ -23,7 +23,10 @@ export { LOGIN, LOGOUT, ACTIVATE };
 
 export default {
   state: {
-    user: new AuthenticatedUser(loadServerToken(backendServer)),
+    user:
+      loadServerToken(backendServer) != null
+        ? new AuthenticatedUser(loadServerToken(backendServer))
+        : null,
     loading: false
   },
   mutations: {
