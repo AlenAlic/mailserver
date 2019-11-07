@@ -11,7 +11,7 @@ from datetime import datetime
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
-email = Mail()
+fmail = Mail()
 
 
 class Anonymous(AnonymousUserMixin):
@@ -36,7 +36,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db, render_as_batch=app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite:'))
     login.init_app(app)
     login.anonymous_user = Anonymous
-    email.init_app(app)
+    fmail.init_app(app)
 
     @app.before_request
     def before_request_callback():
