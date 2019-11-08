@@ -24,7 +24,7 @@
           <td colspan="6">
             <div class="has-component-centered">
               <div v-if="loading" class="spinner_grow--small"></div>
-              <button v-else class="button--cta">Add domain</button>
+              <button v-else class="button--cta" @click="showCreateModal()">Add domain</button>
             </div>
           </td>
         </tr>

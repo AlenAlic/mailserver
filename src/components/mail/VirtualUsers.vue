@@ -23,10 +23,10 @@
       </thead>
       <tbody v-if="loading || virtual_users.length === 0">
         <tr>
-          <td colspan="7">
+          <td colspan="8">
             <div class="has-component-centered">
               <div v-if="loading" class="spinner_grow--small"></div>
-              <button v-else class="button--cta">Add user</button>
+              <button v-else class="button--cta" @click="showCreateModal()">Add user</button>
             </div>
           </td>
         </tr>
