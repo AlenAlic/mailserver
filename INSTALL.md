@@ -1,250 +1,107 @@
 # mailserver
+Set up your own mailserver, to send, recieve and forward mails.
 
-## Installation (Ubuntu 18.04)
+## Preparation
+In general, TLL values of 5 Min. (300 sec) are recommended.
 
-Before we start installing the system, start with the following commands to update the system:
+Any additional info that could be helpful, is given in the *INFO* column (not part of the DNS record). 
 
-    sudo apt -y update
-    sudo apt -y upgrade
+Make sure you have the following DNS records available:
 
-### Base dependencies
-First, we will need install a few base dependencies:
+|Name|Type|Value|INFO|
+|---|---|---|---|
+|@|A|\<your ipv4 adress\>|
+|@|AAAA|\<your ipv6 adress\>|
+|@|MX|10 @|
+|@|TXT|v=spf1 mx a -all|Accepts mail from matching MX and A record, while blocking other mails|
+|api.mailserver|CNAME|@|API for mailserver|
+|mail|MX|10 @|
+|mailserver|CNAME|@|mailserver subdomain|
+|_dmarc|TXT|v=DMARC1; p=quarantine; pct=20; aspf=r; adkim=r;|DMARC policy (See: https://dmarc.org/overview/)|
 
-    sudo apt -y install python3 python3-venv python3-dev mysql-server supervisor nginx git npm
-    sudo apt -y install mailutils postfix-mysql mysql-server dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd dovecot-mysql
 
-### Installing the application
-Install the application through git:
 
-    git clone https://github.com/AlenAlic/mailserver
-    cd mailserver
 
-### Backend
-#### Dependencies
-Create a virtualenv and activate it. Then install all the package dependencies in the virtualenv:
 
-    python3 -m venv venv
-    source venv/bin/activate
-    pip install pip --upgrade
-    pip install setuptools --upgrade
-    pip install -r requirements.txt
-    pip install gunicorn
+## Installation (Ubuntu 18.04 LTS)
 
-#### Config
-Create .env file.
-
-    sudo nano .env
-
-The file should contain at least the following variables:
-
-    SECRET_KEY = "test-key"
-    
-    DATABASE_URI = "mysql+pymysql://mailuser:<db_password>@localhost:3306/mailserver?charset=utf8mb4"
-
-    PRETTY_URL = "<domain>"
-    
-    ALLOWED_URLS = ["url_1", "url_2"]
-
-You can create the SECRET_KEY for the website, and password for the MySQL database using the following command:
-
-    python3 -c "import uuid; print(uuid.uuid4().hex)"
-
-Save the config file (Ctrl+x, y, Enter).
-
-Finally, you need to set the FLASK_APP environment variable in the system:
+### Variables
+Before installing anything, set the following environment variables:
 
     export FLASK_APP=run.py
-    echo "export FLASK_APP=run.py" >> ~/.profile
-The second line sets it so that the command is automatically run when you log in.
-
-#### Database
-Enter the database with the following command:
-
-    sudo mysql
-
-Create a new database called **mailserver**, along with a user with the same name, that has full access to the database.
-
-    CREATE DATABASE mailserver CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    CREATE USER 'mailuser'@'localhost' IDENTIFIED BY '<db-password>';
-    GRANT ALL PRIVILEGES ON mailserver.* TO 'mailuser'@'localhost';
-    FLUSH PRIVILEGES;
-    QUIT;
-
-Make sure you replace *\<db-password>* with the password that was set in the *config.py* file.
-
-Next, we need to initialize the database structure:
-
-    flask db upgrade
-
-#### Set up admin account for website
-Before you can log in to the site, you will need to create the admin account (and floor manager account) through the shell:
-
-    flask shell
-    create_admin(email, password, first_name, last_name)
-    exit()
-    deactivate
-
-#### Gunicorn
-Gunicorn is a pure Python web server that will be used in stead of the built in Flask server.
-Though in stead of running gunicorn directly, we'll let it run through the supervisor package.
-Supervisor will then have it running in the background instead.
-Should something happen to the server, or if the machine is rebooted, the server will be restarted on its own.
-
-Create a file called *mailserver.conf* in the folder */etc/supervisor/conf.d/*
-
-    sudo nano /etc/supervisor/conf.d/mailserver.conf
-
-Copy the data from below into that file and replace *\<username>* with the username of the machine account.
-
-    [program:mailserver]
-    command=/home/<username>/mailserver/venv/bin/gunicorn -b 127.0.0.1:4000 -w 1 run:app
-    directory=/home/<username>/mailserver
-    user=<username>
-    autostart=true
-    autorestart=true
-    stopasgroup=true
-    killasgroup=true
-
-After saving this file, reload the supervisor.
-
-    sudo supervisorctl reload
-
-The gunicorn web server should now be up and running on localhost:4000.
-
-### SSL Certificate
-To have our website accessible through HTTPS, we'll use Certbot to install a Let's Encrypt certificate.
-
-To install Certbot, run the following commands.
-
-    sudo apt install -y software-properties-common
-    sudo add-apt-repository universe
-    sudo add-apt-repository ppa:certbot/certbot
-
-You will be prompted to install the certbot package. Press ENTER to proceed.
-
-    sudo apt install -y certbot python-certbot-nginx
-
-To install the certificate, use the following command.
-
-    sudo certbot certonly --nginx -d <domain> -d <api_domain>
-
-Now finally, go back to the nginx conf files, and uncomment the blocks regarding cretificates.
-Then reload nginx.
-
-    sudo service nginx reload
+    export MAILSERVER_DOMAIN="example.com"
+    export MAILSERVER_MAILUSER_PASSWORD=$(python3 -c "import uuid; print(uuid.uuid4().hex)")
+    export MAILSERVER_SECRET_KEY=$(python3 -c "import uuid; print(uuid.uuid4().hex)")
 
 
-#### Nginx
-Nginx is used to serve the pages that are generated by Gunicorn to the outside world.
+### Base items
+To install all the base dependencies and the mailserver repository, run the `install_base` script.
 
-Create a file called *\<domain>.conf* in the folder */etc/nginx/conf.d/*
+    source scripts/install_base
 
-    sudo nano /etc/nginx/conf.d/<domain>.conf
+### Backend
+To install all the base dependencies and the mailserver repository, run the `install_backend` script.
 
-Copy the data from below into that file and replace *\<username>* with the username of the machine account.
-
-    server {
-        listen 443 ssl http2;
-        server_name <domain>;
-
-        location / {
-            proxy_pass http://127.0.0.1:4000;
-            proxy_redirect off;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        }
-        
-        access_log /var/log/<domain>_access.log;
-        error_log /var/log/<domain>_error.log;
-    
-        ssl_certificate /etc/letsencrypt/live/<domain>/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/<domain>/privkey.pem;
-        include /etc/letsencrypt/options-ssl-nginx.conf;
-        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-        ssl_ecdh_curve secp521r1:secp384r1:prime256v1;
-
-    }
-    server {
-        server_name <domain>;
-        return 301 https://$request_uri;
-    }
-
-
-After saving this file, reload nginx:
-
-    sudo service nginx reload
-
+    source scripts/install_backend
 
 ### Frontend
+To install all the base dependencies and the mailserver repository, run the `install_frontend` script.
 
-#### Config
-Create a file called *config.json* in the folder */public/config/*.
+    source scripts/install_frontend
 
-    sudo nano public/config/config.json
+### Postfix, Dovecot, DKIM
+To install Postfix, Dovecot and DKIM, run following scripts in order:
 
-Paste the api url in the file and save.
-
-    {
-        "api": {
-            "url": ""
-        }
-    }
-
-
-#### Build frontend
-
-    npm install
-    npm run build
-
-#### Nginx
-Nginx is used to serve the pages that are generated by Gunicorn to the outside world.
-
-Create a file called *\<domain>.conf* in the folder */etc/nginx/conf.d/*
-
-    sudo nano /etc/nginx/conf.d/<domain>.conf
-
-Copy the data from below into that file and replace *\<username>* with the username of the machine account.
-
-    server {
-        listen 443 ssl http2;
-        server_name <domain>;
-
-        location / {
-            root /home/<username>/mailserver/dist;
-            index index.html;
-            try_files $uri $uri/ /index.html;
-        }
-        
-        access_log /var/log/<domain>_access.log;
-        error_log /var/log/<domain>_error.log;
+Postfix
     
-        ssl_certificate /etc/letsencrypt/live/<domain>/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/<domain>/privkey.pem;
-        include /etc/letsencrypt/options-ssl-nginx.conf;
-        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-        ssl_ecdh_curve secp521r1:secp384r1:prime256v1;
-        
-    }
-    server {
-        server_name <domain>;
-        return 301 https://$host$request_uri;
-    }
+    source scripts/postfix
 
-After saving this file, reload nginx:
+Dovecot
 
-    sudo service nginx reload
+    source scripts/dovecot
 
-### Congratulations!
+DKIM
 
-The frontend should be available on the local network through the local ip address of the machine you're on.
+    source scripts/dkim
 
-### Allow external access
-If you wish to reach the site through the internet, you'll need a firewall and allow outside access to the server.
+When the `dkim` script is done, open the file containing the DKIM key:
 
-We'll install ufw (the Uncomplicated Firewall), and configure to allow external traffic on port 80 (http), and port 443 (https).
+    sudo nano -$ /etc/opendkim/keys/$MAILSERVER_DOMAIN/mail.txt
 
-    sudo apt install -y ufw
-    sudo ufw allow http
-    sudo ufw allow https
-    sudo ufw --force enable
+Copy this value into your DNS records.
+
+|Name|Type|Value|
+|---|---|---|
+|mail._domainkey|TXT|v=DKIM1; h=sha256; k=rsa; p=<loooooong_string>|
+
+### Backups
+Look up the environment variables with the `env` command and copy the `MAILSERVER_MAILUSER_PASSWORD`
+
+Run the following command, and paste the password when promted:
+
+    sudo mysql_config_editor set --login-path=mailserver --host=localhost --user=mailuser --password
+
+When prompted, paste the database password, and press ENTER.
+
+Next, create the backup directory, and give the right permissions.
+
+    sudo mkdir backups
+    sudo chmod 777 backups
+
+Now that there is a folder for the backups to be stored, copy the backup script, and give the copied file the right permissions, so that it can be executed through a cronjob.
+
+    sudo cp scripts/backup cron/backup
+    sudo chmod 775 cron/backup
+
+Finally, set a cronjob for the weekly backups. Open the crontab:
+
+    crontab -e
+
+Append the following to the file:
+
+    MAILTO=""
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+    
+    @weekly ~/galacursussen/scripts/cron_backup
+
+The database will now be updated weekly.

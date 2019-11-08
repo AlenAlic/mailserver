@@ -1,0 +1,93 @@
+#!/bin/bash
+
+
+echo "Settings:"
+echo "========="
+echo "Mail domain:"
+echo $MAILSERVER_DOMAIN
+
+
+echo "continue? (y/n)"
+read continue
+
+
+if [[ $continue = "y" ]]
+then
+
+echo "Starting install_base installation"
+cd
+cd mailserver
+
+
+
+echo "Updating system==============================="
+sudo apt -y update
+sudo apt -y upgrade
+echo "System updated================================"
+
+echo "Installing install_base dependencies=================="
+sudo apt -y install supervisor python3 python3-venv python3-dev mysql-server supervisor nginx git npm
+echo "Base dependencies installed==================="
+
+echo "Installing mailutils=========================="
+sudo apt -y install mailutils postfix-mysql mysql-server dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd dovecot-mysql
+echo "Mailutils installed==========================="
+
+echo "Installing dkim==============================="
+sudo apt -y install opendkim opendkim-tools
+echo "dkim installed================================"
+
+
+
+echo "Installing SSL certificate===================="
+sudo apt install -y software-properties-common
+sudo add-apt-repository -y universe
+sudo add-apt-repository -y ppa:certbot/certbot
+sudo apt install -y certbot python-certbot-nginx
+sudo certbot certonly --nginx -d $MAILSERVER_DOMAIN -d mail.$MAILSERVER_DOMAIN
+sudo certbot certonly --nginx -d mailserver.$MAILSERVER_DOMAIN -d api.mailserver.$MAILSERVER_DOMAIN
+echo "Installing SSL certificate complete==========="
+
+
+
+echo "Installing mailserver========================="
+
+echo "Installing git repository====================="
+git clone https://github.com/AlenAlic/mailserver
+cd mailserver
+echo "Installing git repository complete============"
+
+echo "Installing venv==============================="
+python3 -m venv venv
+source venv/bin/activate
+pip install pip --upgrade
+pip install setuptools --upgrade
+pip install -r requirements.txt
+pip install gunicorn
+deactivate
+echo "Installing venv complete======================"
+
+echo "Configuring firewall=========================="
+sudo apt -y install ufw
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw allow smtp
+sudo ufw allow pop3s
+sudo ufw allow 587
+sudo ufw allow imaps
+sudo ufw --force enable
+echo "Configuring firewall complete================="
+
+echo "Installing mailserver complete================"
+
+
+
+else
+
+echo "Cancelling installation."
+
+fi
+
+cd
+cd mailserver

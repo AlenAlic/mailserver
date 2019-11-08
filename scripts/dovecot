@@ -1,0 +1,229 @@
+#!/bin/bash
+
+
+echo "Settings:"
+echo "========="
+echo "Domain:"
+echo $MAILSERVER_DOMAIN
+echo "mailuser password:"
+echo $MAILSERVER_MAILUSER_PASSWORD
+
+
+echo "continue? (y/n)"
+read continue
+
+
+if [[ $continue = y ]]
+then
+
+echo "Starting install_backend installation"
+cd
+cd mailserver
+
+
+
+echo "Backup files==================================="
+sudo cp /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.conf.orig
+sudo cp /etc/dovecot/conf.d/10-mail.conf /etc/dovecot/conf.d/10-mail.conf.orig
+sudo cp /etc/dovecot/conf.d/10-auth.conf /etc/dovecot/conf.d/10-auth.conf.orig
+sudo cp /etc/dovecot/dovecot-sql.conf.ext /etc/dovecot/dovecot-sql.conf.ext.orig
+sudo cp /etc/dovecot/conf.d/10-master.conf /etc/dovecot/conf.d/10-master.conf.orig
+sudo cp /etc/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/10-ssl.conf.orig
+echo "Backup original files complete================"
+
+
+
+echo "Dovecot config================================"
+sudo cat > /etc/dovecot/dovecot.conf << EOL
+!include_try /usr/share/dovecot/protocols.d/*.protocol
+protocols = imap pop3 lmtp
+postmaster_address=postmaster at $MAILSERVER_DOMAIN
+
+listen = *, ::
+
+
+dict {
+  #quota = mysql:/etc/dovecot/dovecot-dict-sql.conf.ext
+  #expire = sqlite:/etc/dovecot/dovecot-dict-sql.conf.ext
+}
+
+!include conf.d/*.conf
+!include_try local.conf
+EOL
+echo "Dovecot config complete======================="
+
+
+
+echo "Dovecot mail config==========================="
+sudo cat > /etc/dovecot/conf.d/10-mail.conf << EOL
+mail_location = maildir:/var/mail/vhosts/%d/%n/
+
+namespace inbox {
+  inbox = yes
+}
+
+mail_privileged_group = mail
+
+protocol !indexer-worker {
+  #mail_vsize_bg_after_count = 0
+}
+EOL
+echo "Dovecot mail config complete=================="
+
+
+
+echo "Dovecot sql config============================"
+sudo cat > /etc/dovecot/dovecot-sql.conf.ext << EOL
+driver = mysql
+connect = host=localhost dbname=mailserver user=mailuser password=$MAILSERVER_MAILUSER_PASSWORD
+default_pass_scheme = SHA512-CRYPT
+password_query = SELECT email as user, password FROM virtual_users WHERE email='%u';
+EOL
+echo "Dovecot sql config complete==================="
+
+
+
+echo "Dovecot auth config==========================="
+sudo cat > /etc/dovecot/conf.d/10-auth.conf << EOL
+disable_plaintext_auth = yes
+
+auth_mechanisms = plain login
+
+!include auth-system.conf.ext
+!include auth-sql.conf.ext
+EOL
+echo "Dovecot auth config complete=================="
+
+
+
+echo "Adding virtual hosts and user================="
+sudo mkdir -p /var/mail/vhosts/$MAILSERVER_DOMAIN
+sudo groupadd -g 5000 vmail
+sudo useradd -g vmail -u 5000 vmail -d /var/mail
+sudo chown -R vmail:vmail /var/mail
+echo "Added virtual hosts and user=================="
+
+
+
+echo "Dovecot auth-sql config======================="
+sudo cat > /etc/dovecot/conf.d/auth-sql.conf.ext << EOL
+passdb {
+  driver = sql
+  args = /etc/dovecot/dovecot-sql.conf.ext
+}
+
+userdb {
+  driver = static
+  args = uid=vmail gid=vmail home=/var/mail/vhosts/%d/%n
+}
+EOL
+echo "Dovecot auth-sql config complete=============="
+
+
+
+echo "Change directory owner/permissions============"
+sudo chown -R vmail:dovecot /etc/dovecot
+sudo chmod -R o-rwx /etc/dovecot
+echo "Changed directory owner/permissions==========="
+
+
+
+echo "Dovecot master config========================="
+sudo cat > /etc/dovecot/conf.d/10-master.conf << EOL
+service imap-login {
+  inet_listener imap {
+    port = 0
+  }
+  inet_listener imaps {
+    port = 993
+    ssl = yes
+  }
+}
+
+service pop3-login {
+  inet_listener pop3 {
+    port = 0
+  }
+  inet_listener pop3s {
+    port = 995
+    ssl = yes
+  }
+}
+
+service lmtp {
+  unix_listener /var/spool/postfix/private/dovecot-lmtp {
+    mode = 0600
+    user = postfix
+    group = postfix
+  }
+}
+
+service imap {
+  #process_limit = 1024
+}
+
+service pop3 {
+  #process_limit = 1024
+}
+
+service auth {
+  unix_listener auth-userdb {
+    mode = 0600
+    user = vmail
+    #group =
+  }
+
+  unix_listener /var/spool/postfix/private/auth {
+    mode = 0660
+    user = postfix
+    group = postfix
+  }
+
+  user = dovecot
+}
+
+service auth-worker {
+  user = vmail
+}
+
+service dict {
+  unix_listener dict {
+    #mode = 0600
+    #user =
+    #group =
+  }
+}
+EOL
+echo "Dovecot master config complete================"
+
+
+
+echo "Dovecot ssl config============================"
+sudo cat > /etc/dovecot/conf.d/10-ssl.conf << EOL
+ssl = yes
+
+ssl_cert = </etc/letsencrypt/live/$MAILSERVER_DOMAIN/fullchain.pem
+ssl_key = </etc/letsencrypt/live/$MAILSERVER_DOMAIN/privkey.pem
+
+ssl_client_ca_dir = /etc/ssl/certs
+EOL
+echo "Dovecot ssl config complete==================="
+
+
+
+echo "Reloading dovecot============================="
+sudo systemctl restart dovecot
+echo "Configuring dovecot complete=================="
+
+
+
+echo "Dovecot automatic setup complete=============="
+
+else
+
+echo "Cancelling installation."
+
+fi
+
+cd
+cd mailserver

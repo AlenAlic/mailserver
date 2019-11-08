@@ -1,20 +1,23 @@
 #!/bin/bash
 
 
-website=alenalic.nl
+echo "Settings:"
+echo "========="
+echo "Domain:"
+echo $MAILSERVER_DOMAIN
 
 
-echo "Starting installation"
+echo "continue? (y/n)"
+read continue
 
 
-echo "Updating system==============================="
-sudo apt -y update
-sudo apt -y upgrade
-echo "System updated================================"
+if [[ $continue = y ]]
+then
 
-echo "Installing dkim==============================="
-sudo apt -y install opendkim opendkim-tools
-echo "dkim installed================================"
+echo "Starting install_backend installation"
+cd
+cd mailserver
+
 
 
 echo "Configuring opendkim=========================="
@@ -62,6 +65,8 @@ TrustAnchorFile         /usr/share/dns/root.key
 EOL
 echo "Configuring opendkim.conf complete============="
 
+
+
 echo "Connecting milter to postfix==================="
 sudo sed -i '/SOCKET.*/c\SOCKET="inet:12301@localhost"' /etc/default/opendkim
 sudo sed -i '/#milter_protocol.*/c\milter_protocol = 2' /etc/postfix/main.cf
@@ -70,6 +75,8 @@ sudo sed -i '/#smtpd_milters.*/c\smtpd_milters = inet:localhost:12301' /etc/post
 sudo sed -i '/#non_smtpd_milters.*/c\non_smtpd_milters = inet:localhost:12301' /etc/postfix/main.cf
 echo "Connecting milter to postfix==================="
 
+
+
 echo "Creating TrustedHosts=========================="
 sudo mkdir /etc/opendkim
 sudo bash -c 'cat > /etc/opendkim/TrustedHosts' << EOL
@@ -77,29 +84,37 @@ sudo bash -c 'cat > /etc/opendkim/TrustedHosts' << EOL
 localhost
 192.168.0.1/24
 
-*.$website
+*.$MAILSERVER_DOMAIN
 EOL
 echo "Created TrustedHosts==========================="
 
+
+
 echo "Creating KeyTable=============================="
 sudo bash -c 'cat > /etc/opendkim/KeyTable' << EOL
-mail._domainkey.$website $website:mail:/etc/opendkim/keys/$website/mail.private
+mail._domainkey.$MAILSERVER_DOMAIN $MAILSERVER_DOMAIN:mail:/etc/opendkim/keys/$MAILSERVER_DOMAIN/mail.private
 EOL
 echo "Created KeyTable==============================="
 
+
+
 echo "Creating SigningTable=========================="
 sudo bash -c 'cat > /etc/opendkim/SigningTable' << EOL
-*@$website mail._domainkey.$website
+*@$MAILSERVER_DOMAIN mail._domainkey.$MAILSERVER_DOMAIN
 EOL
 echo "Created SigningTable==========================="
 
+
+
 echo "Generating key================================="
 sudo mkdir /etc/opendkim/keys
-sudo mkdir /etc/opendkim/keys/$website
-cd /etc/opendkim/keys/$website
-sudo opendkim-genkey -s mail -d $website
+sudo mkdir /etc/opendkim/keys/$MAILSERVER_DOMAIN
+cd /etc/opendkim/keys/$MAILSERVER_DOMAIN
+sudo opendkim-genkey -s mail -d $MAILSERVER_DOMAIN
 sudo chown opendkim:opendkim mail.private
 echo "Generated key=================================="
+
+
 
 echo "Reloading services============================="
 sudo service postfix restart
@@ -107,7 +122,17 @@ sudo service opendkim restart
 echo "Configuring opendkim complete=================="
 
 
+
 echo "Open mail.txt and copy the DKIM key to your public DNS"
 echo "sudo nano -$ mail.txt"
 echo "Name: mail._domainkey"
 echo "Value: v=DKIM1;..."
+
+else
+
+echo "Cancelling installation."
+
+fi
+
+cd
+cd mailserver

@@ -1,0 +1,113 @@
+#!/bin/bash
+
+echo "Settings:"
+echo "========="
+echo "Domain:"
+echo $MAILSERVER_DOMAIN
+echo "Secret key:"
+echo $MAILSERVER_SECRET_KEY
+echo "mailuser password:"
+echo $MAILSERVER_MAILUSER_PASSWORD
+
+
+echo "continue? (y/n)"
+read continue
+
+
+if [[ $continue = y ]]
+then
+
+echo "Starting install_backend installation"
+cd
+cd mailserver
+
+
+
+echo "Setting backend environment variables========="
+sudo cat > .env << EOL
+SECRET_KEY = $MAILSERVER_SECRET_KEY
+
+DATABASE_URI = "mysql+pymysql://mailuser:$MAILSERVER_MAILUSER_PASSWORD@localhost:3306/mailserver?charset=utf8mb4"
+
+PRETTY_URL = "$MAILSERVER_DOMAIN"
+ALLOWED_URLS = ["https://mailserver.$MAILSERVER_DOMAIN"]
+EOL
+echo "Setting backend environment variables done===="
+
+
+
+echo "Create database and user======================"
+sudo mysql<<EOF
+CREATE DATABASE mailserver CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'mailuser'@'localhost' IDENTIFIED BY 'MAILSERVER_MAILUSER_PASSWORD';
+GRANT ALL PRIVILEGES ON mailserver.* TO 'mailuser'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+echo "Created database and user====================="
+
+
+
+echo "Migrating database============================"
+flask db upgrade
+echo "Database migration complete==================="
+
+
+
+echo "Setting up backend supervisor================="
+sudo cat > /etc/supervisor/conf.d/mailserver.conf << EOL
+[program:mailserver]
+command=/home/$USER/mailserver/venv/bin/gunicorn -b 127.0.0.1:4000 -w 1 run:app
+directory=/home/$USER/mailserver
+user=$USER
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+EOL
+sudo supervisorctl start mailserver
+echo "Setting up backend supervisor complete========"
+
+
+
+echo "Setting up backend nginx======================"
+sudo cat > /etc/nginx/conf.d/api.mailserver.$MAILSERVER_DOMAIN.conf << EOL
+server {
+    listen 443 ssl http2;
+    server_name api.mailserver.$MAILSERVER_DOMAIN;
+
+    location / {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_redirect off;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    }
+
+    access_log /var/log/api.mailserver.${MAILSERVER_DOMAIN}_access.log;
+    error_log /var/log/api.mailserver.${MAILSERVER_DOMAIN}_error.log;
+
+    ssl_certificate /etc/letsencrypt/live/mailserver.$MAILSERVER_DOMAIN/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/mailserver.$MAILSERVER_DOMAIN/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+    ssl_ecdh_curve secp521r1:secp384r1:prime256v1;
+
+}
+server {
+    server_name api.mailserver.$MAILSERVER_DOMAIN;
+    return 301 https://\$request_uri;
+}
+EOL
+sudo service nginx reload
+echo "Setting up backend nginx complete============="
+
+
+
+else
+
+echo "Cancelling installation."
+
+fi
+
+cd
+cd mailserver
