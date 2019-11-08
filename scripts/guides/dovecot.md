@@ -30,7 +30,7 @@ Save changes
 
 # Add virtual hosts/user
 
-    sudo mkdir -p /var/mail/vhosts/alenalic.nl
+    sudo mkdir -p /var/mail/vhosts/example.com
     sudo groupadd -g 5000 vmail
     sudo useradd -g vmail -u 5000 vmail -d /var/mail
     sudo chown -R vmail:vmail /var/mail
@@ -152,8 +152,8 @@ Save changes
 
 Change
 
-    ssl_cert = </etc/letsencrypt/live/alenalic.nl/fullchain.pem
-    ssl_key = </etc/letsencrypt/live/alenalic.nl/privkey.pem
+    ssl_cert = </etc/letsencrypt/live/example.com/fullchain.pem
+    ssl_key = </etc/letsencrypt/live/example.com/privkey.pem
 
 # Restart dovecot
 

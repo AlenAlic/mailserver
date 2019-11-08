@@ -94,6 +94,7 @@ export default {
         })
         .then(() => {
           this.$notify.info("Alias updated");
+          this.cleanUp();
         })
         .catch(() => {
           this.$notify.error("Could not update alias");

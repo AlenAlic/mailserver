@@ -135,17 +135,17 @@ class VirtualUsers(db.Model, TrackModifications):
     domain_id = db.Column(db.Integer, db.ForeignKey('virtual_domains.id', ondelete="CASCADE"))
     domain = db.relationship("VirtualDomains", back_populates="users")
     email = db.Column(db.String(128), nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
 
     def __repr__(self):
         return f"{self.email}"
 
     def set_password(self, password):
-        self.password_hash = sha512_crypt.hash(password, rounds=5000)
+        self.password = sha512_crypt.hash(password, rounds=5000)
         db.session.commit()
 
     def check_password(self, password):
-        return sha512_crypt.verify(password, self.password_hash)
+        return sha512_crypt.verify(password, self.password)
 
     def username(self):
         try:

@@ -177,6 +177,21 @@ After saving this file, reload nginx:
 
 
 ### Frontend
+
+#### Config
+Create a file called *config.json* in the folder */public/config/*.
+
+    sudo nano public/config/config.json
+
+Paste the api url in the file and save.
+
+    {
+        "api": {
+            "url": ""
+        }
+    }
+
+
 #### Build frontend
 
     npm install
@@ -219,7 +234,6 @@ Copy the data from below into that file and replace *\<username>* with the usern
 After saving this file, reload nginx:
 
     sudo service nginx reload
-
 
 ### Congratulations!
 

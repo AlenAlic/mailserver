@@ -42,7 +42,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('domain_id', sa.Integer(), nullable=True),
     sa.Column('email', sa.String(length=128), nullable=False),
-    sa.Column('password_hash', sa.String(length=128), nullable=False),
+    sa.Column('password', sa.String(length=128), nullable=False),
     sa.ForeignKeyConstraint(['domain_id'], ['virtual_domains.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
