@@ -65,12 +65,15 @@ router.beforeEach((to, from, next) => {
       return;
     }
   } else if (to.name === "sign-in") {
-    next({
-      name: "dashboard",
-      query: {
-        redirect: to.path
-      }
-    });
+    if (Vue.prototype.$auth.isAuthenticated()) {
+      next({
+        name: "dashboard",
+        query: {
+          redirect: to.path
+        }
+      });
+      return;
+    }
   }
   next();
 });
