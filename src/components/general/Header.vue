@@ -8,11 +8,6 @@
               {{ $t("menu.dashboard") }}
             </router-link>
           </li>
-          <li class="nav__item">
-            <router-link :to="{ name: 'styleguide' }" class="nav__link">
-              {{ $t("menu.styleguide") }}
-            </router-link>
-          </li>
           <li class="nav__item--mobile">
             <button @click="signOut" class="nav__link">
               {{ $t("menu.signout") }}
