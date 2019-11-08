@@ -14,9 +14,7 @@
             Last edit
           </th>
           <th class="table__cell--icon" @click="showCreateModal()">
-            <span v-if="virtual_aliases.length > 0" data-tooltip="Add alias" data-tooltip-pos="up">
-              <span class="table__icon mdi mdi-plus-circle"></span>
-            </span>
+            <span v-if="virtual_aliases.length > 0" class="table__icon mdi mdi-plus-circle"></span>
           </th>
           <th class="table__cell--icon"></th>
         </tr>
@@ -40,14 +38,10 @@
           <td>{{ $util.getFormattedDate(alias.created_at) }}</td>
           <td>{{ $util.getFormattedDateTime(alias.updated_at) }}</td>
           <td @click="showUpdateModal(alias)">
-            <span data-tooltip="Edit" data-tooltip-pos="up">
-              <span class="table__icon mdi mdi-pencil"></span>
-            </span>
+            <span class="table__icon mdi mdi-pencil"></span>
           </td>
           <td @click="showDeleteModal(alias)">
-            <span data-tooltip="Delete" data-tooltip-pos="up">
-              <span class="table__icon mdi mdi-delete"></span>
-            </span>
+            <span class="table__icon mdi mdi-delete"></span>
           </td>
         </tr>
       </tbody>

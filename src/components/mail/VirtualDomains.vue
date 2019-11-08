@@ -12,9 +12,7 @@
             Last edit
           </th>
           <th class="table__cell--icon" @click="showCreateModal()">
-            <span v-if="virtual_domains.length > 0" data-tooltip="Add domain" data-tooltip-pos="up">
-              <span class="table__icon mdi mdi-plus-circle"></span>
-            </span>
+            <span v-if="virtual_domains.length > 0" class="table__icon mdi mdi-plus-circle"></span>
           </th>
           <th class="table__cell--icon"></th>
         </tr>
@@ -36,14 +34,10 @@
           <td>{{ $util.getFormattedDate(domain.created_at) }}</td>
           <td>{{ $util.getFormattedDateTime(domain.updated_at) }}</td>
           <td @click="showUpdateModal(domain)">
-            <span data-tooltip="Edit" data-tooltip-pos="up">
-              <span class="table__icon mdi mdi-pencil"></span>
-            </span>
+            <span class="table__icon mdi mdi-pencil"></span>
           </td>
           <td @click="showDeleteModal(domain)">
-            <span data-tooltip="Delete" data-tooltip-pos="up">
-              <span class="table__icon mdi mdi-delete"></span>
-            </span>
+            <span class="table__icon mdi mdi-delete"></span>
           </td>
         </tr>
       </tbody>
