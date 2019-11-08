@@ -68,16 +68,15 @@ def create_app(config_class=Config):
         }
 
     def create_admin(email, password, first_name, last_name):
-        if len(User.query.filter(User.access == values.AL_ADMIN).all()) == 0:
-            a = User()
-            a.email = email
-            a.set_password(password)
-            a.access = values.AL_ADMIN
-            a.is_active = True
-            a.first_name = first_name
-            a.last_name = last_name
-            db.session.add(a)
-            db.session.commit()
+        a = User()
+        a.email = email
+        a.set_password(password)
+        a.access = values.AL_ADMIN
+        a.is_active = True
+        a.first_name = first_name
+        a.last_name = last_name
+        db.session.add(a)
+        db.session.commit()
 
     def create_default_mail(domain_name, password, destination):
         if len(VirtualDomains.query.all()) == 0:
