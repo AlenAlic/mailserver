@@ -179,7 +179,7 @@ then
     password = $pwd
     hosts = 127.0.0.1
     dbname = mailserver
-    query = SELECT destination FROM virtual_aliases WHERE source='%s'
+    query = SELECT destination FROM virtual_aliases WHERE source='%s' UNION ALL SELECT destination FROM virtual_aliases WHERE source='@%d' AND NOT EXISTS (SELECT destination FROM virtual_aliases WHERE source='%s')
     EOL
     echo "Configuring virutal email sending============="
     sudo bash -c 'cat > /etc/postfix/mysql-virtual-email2email.cf' << EOL
